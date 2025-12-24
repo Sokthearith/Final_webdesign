@@ -42,7 +42,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('add-to-cart-btn');
     if (!appState.user) {
         btn.innerText = "Login to Purchase";
-        btn.onclick = () => window.location.href = 'login.html';
+        btn.onclick = () => {
+            // Save current page URL for redirect after login
+            let returnUrl = 'book-detail.html' + window.location.search;
+            try {
+                const pathname = window.location.pathname;
+                const filename = pathname.split('/').pop() || 'book-detail.html';
+                returnUrl = filename + window.location.search;
+            } catch (e) {
+                // Use default with current search params
+                returnUrl = 'book-detail.html' + window.location.search;
+            }
+            localStorage.setItem('bookshop_return_url', returnUrl);
+            localStorage.setItem('bookshop_pending_book_id', currentBookId.toString());
+            window.location.href = 'login.html';
+        };
     }
 });
 

@@ -7,13 +7,23 @@ const appState = {
 
 // --- AUTH FUNCTIONS ---
 function checkAuth() {
-    const user = JSON.parse(localStorage.getItem('bookshop_user'));
-    appState.user = user;
-    updateHeaderAuth();
+    try {
+        const userStr = localStorage.getItem('bookshop_user');
+        appState.user = userStr ? JSON.parse(userStr) : null;
+        updateHeaderAuth();
+    } catch (e) {
+        appState.user = null;
+        updateHeaderAuth();
+    }
 }
 
 function logout() {
     localStorage.removeItem('bookshop_user');
+    appState.user = null;
+    appState.cart = [];
+    localStorage.removeItem('bookshop_cart');
+    updateHeaderAuth();
+    updateCartCount();
     window.location.href = 'index.html';
 }
 
@@ -22,19 +32,30 @@ function updateHeaderAuth() {
     if (!authContainer) return;
 
     if (appState.user) {
+        const displayName = appState.user.email || appState.user.name || "User";
         authContainer.innerHTML = `
-            <span class="user-name">Hi, ${appState.user.name}</span>
+            <span class="user-name">${displayName}</span>
             <button onclick="logout()" class="nav-btn">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
             </button>
         `;
     } else {
+        // Save current page URL before redirecting to login
+        const currentUrl = window.location.pathname.split('/').pop() || 'index.html';
+        const fullUrl = currentUrl + window.location.search;
         authContainer.innerHTML = `
-            <a href="login.html" class="nav-btn">
+            <a href="login.html" class="nav-btn" id="login-link">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 <span>Login</span>
             </a>
         `;
+        // Add click handler to save return URL
+        const loginLink = document.getElementById('login-link');
+        if (loginLink) {
+            loginLink.addEventListener('click', (e) => {
+                localStorage.setItem('bookshop_return_url', fullUrl);
+            });
+        }
     }
 }
 
@@ -47,6 +68,18 @@ function toggleCart() {
 
 function addToCart(bookId) {
     if (!appState.user) {
+        // Save current page and book ID for redirect after login
+        let returnUrl = 'index.html';
+        try {
+            const pathname = window.location.pathname;
+            const filename = pathname.split('/').pop() || 'index.html';
+            returnUrl = filename + window.location.search;
+        } catch (e) {
+            // Fallback to index.html if path extraction fails
+            returnUrl = 'index.html';
+        }
+        localStorage.setItem('bookshop_return_url', returnUrl);
+        localStorage.setItem('bookshop_pending_book_id', bookId.toString());
         window.location.href = 'login.html';
         return;
     }
@@ -138,8 +171,68 @@ function renderCartItems() {
     subtotalEl.innerText = "$" + total.toFixed(2);
 }
 
+// Function to handle pending book addition after login
+function handlePendingBookAdd(retryCount = 0) {
+    // Re-check auth to ensure user state is fresh
+    const userStr = localStorage.getItem('bookshop_user');
+    if (userStr) {
+        try {
+            appState.user = JSON.parse(userStr);
+        } catch (e) {
+            appState.user = null;
+        }
+    }
+    
+    const pendingBookId = localStorage.getItem('bookshop_pending_book_id');
+    
+    // Check if we have all requirements: user is logged in, pending book ID exists
+    if (!pendingBookId || !appState.user) {
+        return; // Exit early if we don't have what we need
+    }
+    
+    // Wait for books array to be available if it's not yet loaded (max 5 retries)
+    if ((typeof books === 'undefined' || !books || books.length === 0) && retryCount < 5) {
+        // Try again after a short delay
+        setTimeout(() => handlePendingBookAdd(retryCount + 1), 100);
+        return;
+    }
+    
+    // If books array still not available after retries, exit
+    if (typeof books === 'undefined' || !books || books.length === 0) {
+        console.warn('Books array not available, cannot add pending book to cart');
+        return;
+    }
+    
+    // Clear the pending book ID first to prevent loops
+    localStorage.removeItem('bookshop_pending_book_id');
+    
+    // Add the book to cart
+    const bookId = parseInt(pendingBookId);
+    const book = books.find(b => b.id === bookId);
+    if (book) {
+        const existing = appState.cart.find(item => item.id === bookId);
+        if (existing) {
+            existing.qty++;
+        } else {
+            appState.cart.push({ ...book, qty: 1 });
+        }
+        saveCart();
+        // Open the cart to show the added item
+        setTimeout(() => {
+            const cartWrapper = document.getElementById('cart-wrapper');
+            if (cartWrapper) {
+                openCart();
+            }
+        }, 500);
+    }
+}
+
 // Initialize Shared Components
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     updateCartCount();
+    
+    // Check if user just logged in and has a pending book to add to cart
+    // Use a small delay to ensure books array is loaded
+    setTimeout(handlePendingBookAdd, 200);
 });

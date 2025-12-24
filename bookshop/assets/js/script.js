@@ -14,7 +14,7 @@ function renderBooks(filter = 'All') {
         // Make entire card clickable
         card.onclick = (e) => {
             // Prevent navigating if clicking the add button
-            if(!e.target.closest('.btn-icon')) {
+            if(!e.target.closest('.btn-cart')) {
                 window.location.href = `book-detail.html?id=${book.id}`;
             }
         };
@@ -25,14 +25,14 @@ function renderBooks(filter = 'All') {
             <div class="card-image">
                 <img src="${book.image}" alt="${book.title}">
             </div>
-            <div class="card-cat">${book.category}</div>
+            <div class="card-cat">${book.category.toUpperCase()}</div>
             <div class="card-title">${book.title}</div>
             <div class="card-author">${book.author}</div>
-            <div class="card-rating">${stars}</div>
+            <div class="card-rating">${stars} (${book.rating})</div>
             <div class="card-footer">
-                <div class="card-price">$${book.price}</div>
-                <button class="btn-icon" onclick="addToCart(${book.id})">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <div class="card-price">$${book.price.toFixed(2)}</div>
+                <button class="btn-cart" onclick="event.stopPropagation(); addToCart(${book.id})">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                 </button>
             </div>
         `;

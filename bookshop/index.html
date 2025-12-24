@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bookshop | Timeless Literature</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/shared.js"></script>
+    <script src="assets/js/script.js"></script>
+</body>
+
+    <header>
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo">Bookshop</a>
+            <div class="nav-icons">
+                <div id="auth-section">
+                    </div>
+                <button class="nav-btn cart-btn" onclick="toggleCart()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span class="badge" id="cart-count">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div id="cart-wrapper" class="">
+        <div class="cart-overlay" onclick="toggleCart()"></div>
+        <aside class="cart-sidebar">
+            <div class="cart-header">
+                <h3>Shopping Cart</h3>
+                <button onclick="toggleCart()"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
+            </div>
+            <div id="cart-list" class="cart-items">
+                </div>
+            <div class="cart-footer">
+                <div class="subtotal">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal">$0.00</span>
+                </div>
+                <button class="btn-primary">Proceed to Checkout</button>
+            </div>
+        </aside>
+    </div>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Discover Your Next Great Read</h1>
+            <p>Curated collection of timeless classics and contemporary favorites. Find stories that inspire, educate, and entertain.</p>
+        </section>
+
+        <section class="filters">
+            <button class="filter-btn active" onclick="filterBooks('All')">All</button>
+            <button class="filter-btn" onclick="filterBooks('Classic')">Classic</button>
+            <button class="filter-btn" onclick="filterBooks('Fiction')">Fiction</button>
+            <button class="filter-btn" onclick="filterBooks('Fantasy')">Fantasy</button>
+        </section>
+
+        <div id="book-grid" class="book-grid">
+            </div>
+    </main>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4>Bookshop</h4>
+                <ul><li>Your destination for timeless literature. Stories that inspire.</li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul><li><a href="#">About Us</a></li><li><a href="#">New Arrivals</a></li><li><a href="#">Bestsellers</a></li><li><a href="#">Gift Cards</a></li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Customer Service</h4>
+                <ul><li><a href="#">Shipping & Returns</a></li><li><a href="#">FAQ</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms & Conditions</a></li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul><li>123 Book St, Literary City</li><li>(555) 123-4567</li><li>hello@bookshop.com</li></ul>
+                <div class="social-links">
+                    <a href="#">FB</a><a href="#">TW</a><a href="#">IG</a>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-bar">&copy; 2025 Bookshop. All rights reserved.</div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="shared.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

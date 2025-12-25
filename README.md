@@ -17,7 +17,7 @@ A modern, responsive online bookstore web application featuring a curated collec
 
 ## Getting Started
 
-1. Place book cover images in `bookshop/assets/images/` (see image filenames in `bookshop/assets/images/README.md`)
+1. Place book cover images in `bookshop/assets/images/` 
 2. Open `bookshop/index.html` with Live Server or any web server
 3. Browse books, login, and add items to cart
 

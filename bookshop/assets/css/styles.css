@@ -1,4 +1,4 @@
-/* --- CSS VARIABLES & RESET --- */
+    /* --- CSS VARIABLES & RESET --- */
 :root {
     --primary: #000000;
     --secondary: #555555;
@@ -193,6 +193,12 @@ header {
     height: 300px;
 }
 
+/* --- MAIN CONTENT --- */
+main {
+    margin-bottom: 6rem;
+    padding-bottom: 2rem;
+}
+
 /* --- BOOK GRID --- */
 .book-grid {
     display: grid;
@@ -359,7 +365,13 @@ header {
 .subtotal { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; }
 
 /* --- FOOTER --- */
-footer { background: #111; color: #fff; padding: 4rem 0 0; margin-top: auto; }
+footer { 
+    background: #111; 
+    color: #fff; 
+    padding: 4rem 0 0; 
+    margin-top: 6rem; 
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
 .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; padding-bottom: 3rem; }
 .footer-col h4 { font-size: 1.1rem; margin-bottom: 1.5rem; }
 .footer-col ul li { margin-bottom: 0.8rem; color: #aaa; font-size: 0.9rem; }

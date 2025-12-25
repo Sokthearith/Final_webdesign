@@ -32,7 +32,13 @@ function updateHeaderAuth() {
     if (!authContainer) return;
 
     if (appState.user) {
-        const displayName = appState.user.email || appState.user.name || "User";
+        let displayName = "User";
+        // Always extract username from email (part before @)
+        if (appState.user.email) {
+            displayName = appState.user.email.split('@')[0];
+        } else if (appState.user.name) {
+            displayName = appState.user.name;
+        }
         authContainer.innerHTML = `
             <span class="user-name">${displayName}</span>
             <button onclick="logout()" class="nav-btn">
